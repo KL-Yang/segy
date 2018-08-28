@@ -1,0 +1,2 @@
+# segy
+segy access library.
