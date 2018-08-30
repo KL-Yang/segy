@@ -220,16 +220,10 @@ int libsegy_getversion(int *major, int *minor)
 }
 
 /**
- * @brief Create a READ/WRITE SEGY handle 
- * @param type          : LIBSEGY_READ or LIBSEGY_WRITE
- *
- * TODO: libsegy_init(void *fp, int flag, struct segy_op_t *op)
- * use this function alone to replace both create and init_io.
- *
  * //read sequence--->
  * libsegy_init()
  * libsegy_get_textheader()
- * libsegy_get_bhdr_field()
+ * libsegy_get_binheader()
  * libsegy_init_trace()
  * libsegy_get_attr()
  * libsegy_get_trace()
@@ -238,17 +232,15 @@ int libsegy_getversion(int *major, int *minor)
  * //write sequence--->
  * libsegy_init()               //create buffer to save all headers
  * libsegy_set_textheader()
- * libsegy_set_bhdr_field()     //need helper function to simplify this!
+ * libsegy_set_binheader()     //need helper function to simplify this!
  * libsegy_init_trace()         //flush header and create trace buffer
  * libsegy_set_attr()           //fill trace attribute
  * libsegy_set_trace()          //fill trace samples
  * libsegy_close()              //flush last batch and close
  * */
 #include "libsegy_utils.c"
-#include "set_header.c"
 #include "libsegy_header.c"
 #include "libsegy_init.c"
-#include "init_io.c"
 #include "init_trace.c"
 
 void libsegy_check_attr_field()
