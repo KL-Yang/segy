@@ -1,3 +1,6 @@
+#ifndef C_UTILS_LIBSEGY
+#define C_UTILS_LIBSEGY
+
 /**
  * ASCII and EBCDIC conversion matrix!
  * */
@@ -39,13 +42,16 @@ static const unsigned char e2a[256] = {
     48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 250,251,252,253,254,255
 };
 
-//TODO change to ebdic2ascii() and ascii2ebdic()
-static int 
-encode(char* dst, const char* src, const unsigned char* conv, size_t n)
+static void ebdic2ascii(char *dst, const char *src, size_t n)
 {
-    for(size_t i = 0; i < n; ++i )
-        dst[ i ] = (char)conv[ (unsigned char) src[ i ] ];
-    return LIBSEGY_OK;
+    for(size_t i=0; i<n; i++)
+        dst[i] = (char)e2a[(unsigned char)src[i]];
+}
+
+static void ascii2ebdic(char *dst, const char *src, size_t)
+{
+    for(size_t i=0; i<n; i++)
+        dst[i] = (char)a2e[(unsigned char)src[i]];
 }
 
 /**
@@ -59,7 +65,7 @@ isEBCDIC_try_ascii(const char *text_header, size_t length, char *temp)
         if(!isascii(text_header[i])) 
             ascii_count++;
     if(ascii_count) {
-        encode(temp, text_header, e2a, length);
+        ebdic2ascii(temp, text_header, length);
         for(size_t i=0; i<length; i++)
             if(!isascii(temp[i]))
                 ebcdic_count++;
@@ -77,7 +83,7 @@ isEBCDIC_try_print(const char *text_header, size_t length, char *temp)
         if(!isprint(text_header[i])) 
             ascii_count++;
     if(ascii_count) {
-        encode(temp, text_header, e2a, length);
+        ebdic2ascii(temp, text_header, length);
         for(size_t i=0; i<length; i++)
             if(!isprint(temp[i]))
                 ebcdic_count++;
@@ -115,3 +121,5 @@ isEBCDIC_text_header(const char *text_header, size_t length)
     free(local);
     return isEBCDIC;
 }
+
+#endif

@@ -14,7 +14,7 @@ static int init_io_read(libsegy_h handle)
     h->fn_read(localbuf, 3600, sizeof(char), h->fp);
     if(isEBCDIC_text_header(localbuf, 3200)) {
         h->text_ebdic = 1;
-        encode(h->text_header, localbuf, e2a, 3200);
+        ebdic2ascii(h->text_header, localbuf, 3200);
     } else 
         memcpy(h->text_header, localbuf, 3200);
     memcpy(h->bin_header, localbuf+3200, 400);

@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     printf("ext_headers=%d revision=%d nsamp=%d format=%d ninst=%d\n", 
             ext_headers, revision, nsamp, format, ninst);
 
-    ninst = MIN(1201, ninst);
+    ninst = MIN(10000, ninst);
 
     libsegy_init_trace(segy, ninst, -1);
     int32_t *xline = malloc(ninst*sizeof(int32_t));
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
     FILE *pngfp = fopen("unit01.png", "w");
     uint8_t *pngdata = calloc(ninst, nsamp*sizeof(uint8_t));
-    float2uint8(trace, ninst*nsamp, pngdata, 0.01f);
+    float2uint8(trace, ninst*nsamp, pngdata, 1.0f);
     unit_data2png(pngfp, pngdata, nsamp, ninst, 1);
     free(pngdata);
     fclose(pngfp);
