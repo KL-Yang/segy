@@ -48,7 +48,7 @@ static void ebdic2ascii(char *dst, const char *src, size_t n)
         dst[i] = (char)e2a[(unsigned char)src[i]];
 }
 
-static void ascii2ebdic(char *dst, const char *src, size_t)
+static void ascii2ebdic(char *dst, const char *src, size_t n)
 {
     for(size_t i=0; i<n; i++)
         dst[i] = (char)a2e[(unsigned char)src[i]];

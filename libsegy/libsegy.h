@@ -169,9 +169,7 @@ int libsegy_getversion(int *major, int *minor);
  * @brief create libsegy handle for read or write
  * READ with or without seek?
  * */
-int libsegy_create_struct(libsegy_h *handle, int type, libsegy_io_func_t *op);
-//TODO: change to libsegy_init(handle, type, fp, io_func_t)
-//and merge libsegy_init_io into this!!!
+int libsegy_init(libsegy_h *handle, int type, void *fp, libsegy_io_func_t *op);
 
 /**
  * @brief Set text, binary and extend text headers

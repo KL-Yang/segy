@@ -9,6 +9,7 @@
 
 #define LIBSEGY_SIZE_TEXTHEAD   3200
 #define LIBSEGY_SIZE_BINHEAD    400
+#define LIBSEGY_SIZE_TRACEHEAD  240
 
 #define LIBSEGY_BASE_BINHEADER  3201
 #define MIN(a,b)    (a)>(b)?(b):(a)
@@ -211,7 +212,12 @@ static int
 dummy_fseek(void *stream, long offset, int whence)
 { return fseek(stream, offset, whence); }
 
-#include "libsegy_utils.c"
+int libsegy_getversion(int *major, int *minor)
+{
+    *major = LIBSEGY_MAJOR;
+    *minor = LIBSEGY_MINOR;
+    return LIBSEGY_OK;
+}
 
 /**
  * @brief Create a READ/WRITE SEGY handle 
@@ -238,38 +244,10 @@ dummy_fseek(void *stream, long offset, int whence)
  * libsegy_set_trace()          //fill trace samples
  * libsegy_close()              //flush last batch and close
  * */
-int libsegy_getversion(int *major, int *minor)
-{
-    *major = LIBSEGY_MAJOR;
-    *minor = LIBSEGY_MINOR;
-    return LIBSEGY_OK;
-}
-
-int libsegy_create_struct(libsegy_h *handle, int type, libsegy_io_func_t *op)
-{
-    segy_struct_t *h;
-    h = calloc(1, sizeof(segy_struct_t));
-    h->type = type;
-    if(op!=NULL) {
-        h->fn_read = op->fn_read;
-        h->fn_write = op->fn_write;
-        h->fn_seek = op->fn_seek;
-    } else {
-        h->fn_read = &dummy_fread;
-        h->fn_write = &dummy_fwrite;
-        h->fn_seek = &dummy_fseek;
-    }
-    assert(type==LIBSEGY_READ || type==LIBSEGY_WRITE);
-    if(type==LIBSEGY_WRITE) {   //allocate text and binary header!
-        h->bin_header = calloc(LIBSEGY_SIZE_BINHEAD, sizeof(char));
-        h->text_header = calloc(LIBSEGY_SIZE_TEXTHEAD+1, sizeof(char));
-    }
-    *handle = (libsegy_h)h;
-    return LIBSEGY_OK;
-}
-
+#include "libsegy_utils.c"
 #include "set_header.c"
 #include "libsegy_header.c"
+#include "libsegy_init.c"
 #include "init_io.c"
 #include "init_trace.c"
 

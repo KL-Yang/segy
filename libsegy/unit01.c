@@ -10,13 +10,11 @@ int main(int argc, char *argv[])
 
     char *name = argv[1];
     int error, nsamp, text_len = 3200;
+    FILE *fp2 = fopen(name, "r");
 
     segy_struct_h segy;
-    error = libsegy_create_struct(&segy, LIBSEGY_READ, NULL);
+    error = libsegy_init(&segy, LIBSEGY_READ, fp2, NULL);
     assert(error==LIBSEGY_OK);
-
-    FILE *fp2 = fopen(name, "r");
-    error = libsegy_init_io(segy, fp2);
 
     char text_header[3201]; text_header[3200]='\0';
     libsegy_get_textheader(segy, text_header, 3201, 0);
