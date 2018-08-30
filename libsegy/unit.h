@@ -6,8 +6,6 @@
 #include <float.h>
 #include <png.h>
 #include <math.h>
-#include "segy_bhdr.h"
-#include "segy_thdr.h"
 #include "libsegy.h"
 
 #define MIN(a,b)    (a)>(b)?(b):(a)

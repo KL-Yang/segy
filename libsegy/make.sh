@@ -1,5 +1,6 @@
 #/bin/bash
 
+rm -f unit01
 #cflag="-O2"
 cflag="-ggdb -W -Wall"
 gcc -c $cflag libsegy.c

@@ -6,14 +6,20 @@
 #include <assert.h>
 #include <arpa/inet.h>
 #include "libsegy.h"
-#include "segy_bhdr.h"
-#include "segy_thdr.h"
 
 #define LIBSEGY_SIZE_TEXTHEAD   3200
 #define LIBSEGY_SIZE_BINHEAD    400
 
 #define LIBSEGY_BASE_BINHEADER  3201
 #define MIN(a,b)    (a)>(b)?(b):(a)
+
+typedef struct {
+    char        name[32];
+    int         type;
+    int         pos;
+    int         index;  //QC
+} segy_field_t;
+
 
 /**
  * There need to be several stage:
