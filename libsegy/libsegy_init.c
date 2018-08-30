@@ -23,7 +23,7 @@ static int init_io_read2(libsegy_h handle)
     h->flag |= LIBSEGY_FLAG_IO_INITIATED;
 
     int ext_header;
-    libsegy_get_bhdr_field(handle, SEGY_BHDR_EXT_HEADERS, &ext_header);
+    libsegy_get_binheader(handle, SEGY_BHDR_EXT_HEADERS, &ext_header);
     h->trace_base = LIBSEGY_SIZE_TEXTHEAD+LIBSEGY_SIZE_BINHEAD
         +LIBSEGY_SIZE_TEXTHEAD*ext_header;
 

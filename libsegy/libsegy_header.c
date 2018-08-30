@@ -28,7 +28,7 @@ libsegy_get_textheader(libsegy_h handle, char *text, size_t length, int index)
  * @param field_id : Predefined field id constant
  * */
 int
-libsegy_get_bhdr_field(segy_struct_h handle, int field_id, int *value)
+libsegy_get_binheader(segy_struct_h handle, int field_id, int *value)
 {
     segy_struct_t *h = (segy_struct_t*)handle;
     if(!(h->flag & LIBSEGY_FLAG_IO_INITIATED))
@@ -59,9 +59,9 @@ static int
 get_bhdr_samples(segy_struct_h handle)
 {
     int flag, samples=0;
-    libsegy_get_bhdr_field(handle, SEGY_BHDR_TRACE_FLAG, &flag);
+    libsegy_get_binheader(handle, SEGY_BHDR_TRACE_FLAG, &flag);
     if(flag!=0)
-        libsegy_get_bhdr_field(handle, SEGY_BHDR_SAMPLES, &samples);
+        libsegy_get_binheader(handle, SEGY_BHDR_SAMPLES, &samples);
     return samples;
 }
 
@@ -69,7 +69,7 @@ int
 segy_get_bhdr_interval(segy_struct_h handle)
 {   
     int si;
-    libsegy_get_bhdr_field(handle, SEGY_BHDR_INTERVAL, &si); 
+    libsegy_get_binheader(handle, SEGY_BHDR_INTERVAL, &si); 
     return si;
 }
 
@@ -77,7 +77,7 @@ int
 segy_get_bhdr_traces(segy_struct_h handle)
 {   
     int ninst;
-    libsegy_get_bhdr_field(handle, SEGY_BHDR_TRACES, &ninst); 
+    libsegy_get_binheader(handle, SEGY_BHDR_TRACES, &ninst); 
     return ninst;
 }
 
@@ -85,7 +85,7 @@ static int
 get_bhdr_format(segy_struct_h handle, int *size)
 {
     int format;
-    libsegy_get_bhdr_field(handle, SEGY_BHDR_FORMAT, &format);
+    libsegy_get_binheader(handle, SEGY_BHDR_FORMAT, &format);
     switch(format) {
         case 1: //IBM float
         case 2: //INT32
@@ -105,12 +105,12 @@ get_bhdr_format(segy_struct_h handle, int *size)
     return format;
 }
 
-void libsegy_check_bhdr_field(segy_struct_h handle)
+void libsegy_check_binheader(segy_struct_h handle)
 {
     int numb = sizeof(segy_binfield)/sizeof(segy_field_t);
     for(int i=0; i<numb; i++) {
         int val;
-        libsegy_get_bhdr_field(handle, segy_binfield[i].index, &val);
+        libsegy_get_binheader(handle, segy_binfield[i].index, &val);
         printf("[%2d] %24s  %4d | VAL=%d\n", i, segy_binfield[i].name,
                 segy_binfield[i].pos, val);
     }

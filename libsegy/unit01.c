@@ -26,14 +26,14 @@ int main(int argc, char *argv[])
         printf("|\n");
     }
     
-    libsegy_check_bhdr_field(segy);
+    libsegy_check_binheader(segy);
 
     int ext_headers, revision, format, ninst;
-    libsegy_get_bhdr_field(segy, SEGY_BHDR_EXT_HEADERS, &ext_headers);
-    libsegy_get_bhdr_field(segy, SEGY_BHDR_SEGY_REVISION, &revision);
-    libsegy_get_bhdr_field(segy, SEGY_BHDR_SAMPLES, &nsamp);
-    libsegy_get_bhdr_field(segy, SEGY_BHDR_FORMAT, &format);
-    libsegy_get_bhdr_field(segy, SEGY_BHDR_TRACES, &ninst);
+    libsegy_get_binheader(segy, SEGY_BHDR_EXT_HEADERS, &ext_headers);
+    libsegy_get_binheader(segy, SEGY_BHDR_SEGY_REVISION, &revision);
+    libsegy_get_binheader(segy, SEGY_BHDR_SAMPLES, &nsamp);
+    libsegy_get_binheader(segy, SEGY_BHDR_FORMAT, &format);
+    libsegy_get_binheader(segy, SEGY_BHDR_TRACES, &ninst);
     printf("ext_headers=%d revision=%d nsamp=%d format=%d ninst=%d\n", 
             ext_headers, revision, nsamp, format, ninst);
 

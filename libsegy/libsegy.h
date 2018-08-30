@@ -179,20 +179,10 @@ int libsegy_set_bhdr_field(libsegy_h handle, int field_id, int value);
 int libsegy_set_textheader(libsegy_h handle, const char *buff, int index);
 
 /**
- * @brief initiate io for libsegy
- * Note, for read, all the get information should go after init_io
- * for write segy, all the set header functions should go before init_io
- * */
-int libsegy_init_io(libsegy_h handle, void *fp);
-
-/**
  * @brief Get text, binary and extend text headers
  * */
+int libsegy_get_binheader(segy_struct_h handle, int field_id, int *value);
 int libsegy_get_textheader(libsegy_h handle, char *text, size_t length, int index);
-int libsegy_get_bhdr_field(segy_struct_h handle, int field_id, int *value);
-
-//debug function to print all bhdr field
-void libsegy_check_bhdr_field(segy_struct_h handle);
 
 /**
  * @param first : put as last parameters and later as variable argument
@@ -210,6 +200,9 @@ int libsegy_get_attr_raw(segy_struct_h handle, int field_id, int32_t *buff, int 
 int libsegy_get_trace_raw(segy_struct_h handle, void *buff, int numb, int64_t first);
 //libsegy_set_attr_raw
 //libsegy_set_trace_raw
+
+//debug function to print all bhdr field
+void libsegy_check_binheader(segy_struct_h handle);
 
 //mimic the libpng API, and python module named pysegy
 //maybe later pysegd
