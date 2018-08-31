@@ -22,10 +22,9 @@ static int init_io_read2(libsegy_h handle)
 
     h->flag |= LIBSEGY_FLAG_IO_INITIATED;
 
-    int ext_header;
-    libsegy_get_binheader(handle, SEGY_BHDR_EXT_HEADERS, &ext_header);
+    libsegy_get_binheader(handle, SEGY_BHDR_EXT_HEADERS, &h->n_etextheader);
     h->trace_base = LIBSEGY_SIZE_TEXTHEAD+LIBSEGY_SIZE_BINHEAD
-        +LIBSEGY_SIZE_TEXTHEAD*ext_header;
+        +LIBSEGY_SIZE_TEXTHEAD*h->n_etextheader;
 
     h->bhdr_format = get_bhdr_format(handle, &h->trace_typesize);
     h->samples = get_bhdr_samples(handle);
@@ -38,6 +37,32 @@ static int init_io_read2(libsegy_h handle)
         h->trace_size = LIBSEGY_SIZE_TRACEHEAD+h->trace_typesize*h->samples;
 
     //2. if necessary, read and parse the rest extended headers
+    return LIBSEGY_OK;
+}
+
+/**
+ * @brief write header of SEGY file, to be called at first libsegy_init_trace()
+ * */
+static int init_io_write_header(libsegy_h handle)
+{
+    segy_struct_t *h = (segy_struct_t*)handle;
+
+    //1. write the text header!
+    char local[LIBSEGY_SIZE_TEXTHEAD];
+    if(h->fn_seek!=NULL)
+        h->fn_seek(h->fp, 0L, SEEK_SET);
+    ascii2ebdic(local, h->text_header, LIBSEGY_SIZE_TEXTHEAD);
+    h->fn_write(local, sizeof(char), LIBSEGY_SIZE_TEXTHEAD, h->fp);
+    
+    //2. write bin header
+    h->fn_write(h->bin_header, sizeof(char), LIBSEGY_SIZE_BINHEAD, h->fp);
+
+    //3. write extended header
+    for(int i=0; i<h->n_etextheader; i++) {
+        ascii2ebdic(local, h->etextheader[i], LIBSEGY_SIZE_TEXTHEAD);
+        h->fn_write(local, sizeof(char), LIBSEGY_SIZE_TEXTHEAD, h->fp);
+    }
+    h->flag |= LIBSEGY_FLAG_IO_INITIATED;
     return LIBSEGY_OK;
 }
 

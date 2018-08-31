@@ -63,6 +63,8 @@ libsegy_init_trace(libsegy_h handle, int numb, int64_t first)
         assert(h->samples!=0);  //fixed length!
         init_trace_read(handle, numb, first);
     } else {
+        if(!(h->flag & LIBSEGY_FLAG_IO_INITIATED))
+            init_io_write_header(handle);
         init_trace_write(handle, numb, first);
     }
     return LIBSEGY_OK;

@@ -195,23 +195,6 @@ typedef struct {
 
 #define LIBSEGY_FLAG_IO_INITIATED   (1u<<0)
 
-/**
- * Those are examples of creating new streaming function
- * seek is forbiden, everything is only read/write once
- * close and open is done outside of libsegy!
- * */
-static size_t
-dummy_fread(void *ptr, size_t size, size_t nmemb, void *stream)
-{ return fread(ptr, size, nmemb, stream); }
-
-static size_t
-dummy_fwrite(const void *ptr, size_t size, size_t nmemb, void *stream)
-{ return fwrite(ptr, size, nmemb, stream); }
-
-static int 
-dummy_fseek(void *stream, long offset, int whence)
-{ return fseek(stream, offset, whence); }
-
 int libsegy_getversion(int *major, int *minor)
 {
     *major = LIBSEGY_MAJOR;
@@ -238,6 +221,7 @@ int libsegy_getversion(int *major, int *minor)
  * libsegy_set_trace()          //fill trace samples
  * libsegy_close()              //flush last batch and close
  * */
+#include "libsegy_func.c"
 #include "libsegy_utils.c"
 #include "libsegy_header.c"
 #include "libsegy_init.c"
@@ -255,5 +239,5 @@ void libsegy_check_attr_field()
     }
 }
 
-#include "get_attr.c"
+#include "libsegy_attr.c"
 #include "get_trace.c"

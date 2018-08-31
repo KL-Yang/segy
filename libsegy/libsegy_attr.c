@@ -26,7 +26,7 @@ assert_init_range(segy_struct_h handle, int numb, int64_t first)
 static int get_attr_raw(void *buff, int field_id)
 {
     segy_field_t *field = &segy_trace_attr[field_id];
-    int offset = field->pos-segy_trace_attr[0].pos;
+    size_t offset = field->pos-segy_trace_attr[0].pos;
     void *p = buff+offset;
     if(field->type==LIBSEGY_TYPE_INT16) {
         uint16_t val16;
@@ -39,10 +39,20 @@ static int get_attr_raw(void *buff, int field_id)
     }
 }
 
-//debug function!
-int
-libsegy_check_attr(libsegy_h handle, int64_t first) 
+/**
+ * @brief Debug function to print all attribute 
+ * */
+int libsegy_check_attr(libsegy_h handle, int64_t first) 
 {
+    assert_init_range(handle, 1, first);
+    segy_struct_t *h = (segy_struct_t*)handle;
+    size_t offset = (first-h->trace_first)*h->trace_size;
+    void *buff = h->trace_buff+offset;
+    for(int i=0; i<SEGY_ATTR_TOTAL; i++) {
+        int value = get_attr_raw(buff, i);
+        printf("%24s -> %d\n", segy_trace_attr[i].name, value);
+    }
+    return LIBSEGY_OK;
 }
 
 int
@@ -59,11 +69,7 @@ libsegy_get_attr_raw(segy_struct_h handle, int field_id, int32_t *buff, int numb
     if(first<h->trace_first || first+numb>h->trace_first+h->trace_numb) {
         printf("ERROR: Access uninitiated trace range!");
         abort();
-    } /*
-    for(int i=0; i<SEGY_ATTR_TOTAL; i++) {
-        int value = get_attr_raw(h->trace_buff, i);
-        printf("%24s -> %d\n", segy_trace_attr[i].name, value);
-    } */
+    } 
     if(h->samples!=0) {
         void *p = h->trace_buff+tr_shift*h->trace_size+at_shift;
         if(field->type==LIBSEGY_TYPE_INT16) {
