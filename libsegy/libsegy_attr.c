@@ -89,3 +89,15 @@ libsegy_get_attr_raw(segy_struct_h handle, int field_id, int32_t *buff, int numb
     }
     return LIBSEGY_OK;
 }
+
+void libsegy_check_attr_field()
+{
+    int numb = sizeof(segy_trace_attr)/sizeof(segy_field_t);
+    for(int i=0, j=1; i<numb; i++) {
+        printf("[%2d] %24s  %4d <-> %4d\n", i, segy_trace_attr[i].name,
+                segy_trace_attr[i].pos, j);
+        assert(segy_trace_attr[i].index==i);
+        int x = (segy_trace_attr[i].type==LIBSEGY_TYPE_INT16)?(2):(4);
+        j += x;
+    }
+}

@@ -46,6 +46,10 @@ static void init_trace_write(libsegy_h handle, int numb, int64_t first)
         } else 
             memset(h->trace_buff, 0, numb*h->trace_size);
     } else {
+        // If not fixed length, cannot initiate the buffer
+        // so the right way should be initiate attr and trace buffer
+        // seperately! when trace length attribute is write,
+        // trace buffer can be allocated immediately
         printf("ERROR: %s does not support variable length trace yet!\n",
                 __func__);
     }
